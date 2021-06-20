@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -10,9 +11,9 @@ namespace WalmartIntergration.Services.WalmartIntergration
     public class WalmartAccessTokenService
     {
         private static readonly string AccessTokenCacheKey = "accessToken";
-        private static readonly string _baseUrl = "https://marketplace.walmartapis.com/";
 
         private static readonly MemoryCache _cache;
+
 
         static WalmartAccessTokenService()
         {
@@ -20,10 +21,10 @@ namespace WalmartIntergration.Services.WalmartIntergration
         }
 
         private readonly HttpClient _client;
-        public WalmartAccessTokenService(HttpClient client)
+        public WalmartAccessTokenService(HttpClient client, IConfiguration configuration)
         {
             this._client = client;
-            _client.BaseAddress = new Uri(_baseUrl);
+            _client.BaseAddress = new Uri(configuration.GetValue<string>("WallmartIntergration:BaseUrl"));
         }
 
         public string GetAccessToken()

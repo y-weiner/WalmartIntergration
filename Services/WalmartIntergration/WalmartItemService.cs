@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -11,16 +12,14 @@ namespace WalmartIntergration.Services
 {
     public class WalmartItemService
     {
-        private static readonly string _baseUrl = "https://marketplace.walmartapis.com/";
-
         private readonly HttpClient _client;
         private readonly WalmartAccessTokenService _accessTokenService;
 
-        public WalmartItemService(HttpClient client, WalmartAccessTokenService accessTokenService)
+        public WalmartItemService(HttpClient client, WalmartAccessTokenService accessTokenService, IConfiguration configuration)
         {
             this._client = client;
             this._accessTokenService = accessTokenService;
-            _client.BaseAddress = new Uri(_baseUrl);
+            _client.BaseAddress = new Uri(configuration.GetValue<string>("WallmartIntergration:BaseUrl"));
         }
 
         public async Task<IEnumerable<WalmartItem>> FetchItems()
